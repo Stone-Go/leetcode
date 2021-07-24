@@ -271,3 +271,47 @@ int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
   return ret;
 }
 
+//7. C, qsort
+
+typedef struct {
+    int value;
+    int index;
+} Node;
+
+int cmp(const void* lhs, const void* rhs) { 
+    return ((const Node*)lhs)->value - ((const Node*)rhs)->value; 
+}
+
+int* twoSum(int* nums, int n, int target, int* returnSize) {
+    *returnSize = 2;
+    int *ans = calloc(2, sizeof(*nums));
+    Node *a = calloc(n, sizeof(*a));
+    for (size_t i = 0; i < n; ++i) {
+        a[i] = (Node) { 
+            .value = nums[i], 
+            .index = i 
+        };
+    }
+    qsort(a, n, sizeof(*a), cmp);
+    for (size_t ai = 0; ai < n; ++ai) {
+        int complement = target - a[ai].value;
+        int i = a[ai].index;
+        Node *ptr = bsearch(&complement, a, n, sizeof(*a), cmp);
+        if (ptr) {
+            int j = ptr->index;
+            if (i == j) {
+                if ((ptr + 1) < (a + n) && (ptr + 1)->value == ptr->value) {
+                    j = (ptr + 1)->index;
+                } else if (ptr > a && (ptr - 1)->value == ptr->value) {
+                    j = (ptr - 1)->index;
+                }
+            }
+            ans[0] = i;
+            ans[1] = j;
+            return ans;
+        }
+    }
+    return ans;
+}
+
+
