@@ -28,4 +28,42 @@ The number of nodes in each linked list is in the range [1, 100].
 It is guaranteed that the list represents a number that does not have leading zeros.
 */
 
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+
+struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2){
+    struct ListNode t;
+    t.val = 0;
+    struct ListNode* x = &t;
+    
+    uint8_t carry = 0;
+    while(l1 || l2 || carry) {
+        uint8_t sum = carry;
+        if (l1) {
+	    sum += l1->val;
+	    l1 = l1->next;
+	}
+
+        if (l2) {
+	    sum += l2->val;
+	    l2 = l2->next;
+	}
+        carry = sum / 10;
+
+        x->next = (struct ListNode*)malloc(sizeof(struct ListNode));
+        x = x->next;
+        x->val = sum % 10;
+
+        // if (l1) l1 = l1->next;
+        // if (l2) l2 = l2->next;
+    }
+
+    x->next = NULL;
+    return t.next;
+}
 
